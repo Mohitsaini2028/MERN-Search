@@ -42,12 +42,12 @@ export const Search = () => {
                 <div className="card text-bg-info mb-3" style={{width: "18rem"}}>
                 <img src={item.imageUrl} alt="image" class="imgFluid" /> 
                     <div className="card-body">
-                        <h4 className="card-title text-light">{item.companyId.name}</h4>
+                        <h4 className="card-title text-light">{item.company.name}</h4>
                         <h6 className="card-title">{item.headline}</h6>
                         <p className="card-text">{item.description}</p>
                         <p className="card-text">{item.primaryText}</p>
                         <button href="#" className="btn btn-primary">{item.CTA}</button>
-                        <a href={item.companyId.url} className="btn ml-2 btn-success">Visit</a>
+                        <a href={item.company.url} className="btn ml-2 btn-success">Visit</a>
                     </div>
                 </div>
                 </div>

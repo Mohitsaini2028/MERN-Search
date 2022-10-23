@@ -20,9 +20,37 @@ router.get('/', async function (req, res) {
    
     try{
 
-        var company = await Company.find({name: {$regex: searchTerm, $options : "i"}}, {"_id": 1});    
-        var user = await Ads.find({$or: [{primaryText: {$regex: searchTerm, $options : "i"} }, {headline: {$regex: searchTerm, $options : "i"}}, {description: {$regex: searchTerm, $options : "i"}}, {companyId: {$in: company}}]}).populate("companyId");
-        
+        var user = await Ads.aggregate([
+            {
+                $lookup: {
+                from: "Company",
+                localField: "companyId",   
+                foreignField: "_id",
+                as: "company"  
+            }
+            },
+            {
+              $unwind:{path:"$company"}
+            },
+            {
+                $match:{
+                    $or: [{primaryText: {$regex: searchTerm, $options : "i"} }, {headline: {$regex: searchTerm, $options : "i"}}, {description: {$regex: searchTerm, $options : "i"}}, {name: {$regex: searchTerm, $options : "i"}}]
+                }
+            },
+            {
+                "$project": {
+                    "_id": 1,
+                    "company": 1,
+                    "headline": 1,
+                    "primaryText": 1,
+                    "description": 1,
+                    "imageUrl": 1,
+                    "CTA": 1                
+                }
+            }
+
+        ])
+
         return res.status(200).json(
             {
                 Result : user
